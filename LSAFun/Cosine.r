@@ -1,16 +1,17 @@
-#### Distance Metrics
+#### Easier Two-Word Cosine 
 
 #' @export
+#' @importFrom lsa cosine 
 
-distance <- function(x,y,method="euclidean",tvectors=tvectors,breakdown=FALSE){
+Cosine <- function(x,y,tvectors=tvectors,breakdown=FALSE){
   
   if(class(tvectors) == "data.frame"){
     tvectors <- as.matrix(tvectors)
-  }else if(class(tvectors) == "textmatrix"){
-    tvectors <- matrix(tvectors,
-                       nrow=nrow(tvectors),ncol=ncol(tvectors),
-                       dimnames=list(rownames(tvectors),colnames(tvectors)))
-  }
+    }else if(class(tvectors) == "textmatrix"){
+      tvectors <- matrix(tvectors,
+                         nrow=nrow(tvectors),ncol=ncol(tvectors),
+                         dimnames=list(rownames(tvectors),colnames(tvectors)))
+    }
   
   if(class(tvectors) == "matrix"){
     
@@ -35,22 +36,7 @@ distance <- function(x,y,method="euclidean",tvectors=tvectors,breakdown=FALSE){
     
     if(x %in% rownames(tvectors) && y %in% rownames(tvectors)){
       
-      v <- tvectors[x,]
-      w <- tvectors[y,]
-      
-      if(method == "euclidean"){
-        
-        dist <- sqrt( sum( (v - w)^2 ) )
-        
-      }
-      
-      
-      if(method == "cityblock"){
-        
-        dist <- sum( abs(v - w))
-        
-      }
-      
+      as.numeric(cosine(tvectors[x,],tvectors[y,]))
       
     }else{
       
